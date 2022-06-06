@@ -4,7 +4,7 @@
 
 I wanted something that could be used to make a scatter chart because I wanted to make a meme. Here's the app I spent too long working on.
 
-![Preview of the App](/docs/preview.png)
+![Preview of the App](/preview/preview.png)
 
 # Features
  - Tons of customization!
@@ -12,7 +12,7 @@ I wanted something that could be used to make a scatter chart because I wanted t
  - Entry labels readjust themselves automatically!
  - Renders to canvases (easy to save)!
  - (Mostly) responsive!
- - Something like 12KiB gzipped!
+ - Something like 13KB compressed!
 
 # Not-Features
 These are things that may or may not ever be finished, depending on if I get time
