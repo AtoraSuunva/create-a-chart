@@ -4,6 +4,8 @@
 
 I wanted something that could be used to make a scatter chart because I wanted to make a meme. Here's the app I spent too long working on.
 
+Check it out here: https://create-a-chart.pages.dev/
+
 ![Preview of the App](/public/preview.png)
 
 # Features
