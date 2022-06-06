@@ -4,7 +4,7 @@
 
 I wanted something that could be used to make a scatter chart because I wanted to make a meme. Here's the app I spent too long working on.
 
-![Preview of the App](/preview/preview.png)
+![Preview of the App](/public/preview.png)
 
 # Features
  - Tons of customization!
