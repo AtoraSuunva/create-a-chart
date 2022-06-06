@@ -194,6 +194,24 @@ export function ChartSettings() {
             onInput={updateSetting('gridColor')}
           />
         </div>
+
+        <hr />
+
+        <div>
+          <p>Want to save the chart? Right click and save image!</p>
+          <p class="credits">
+            Website by <a href="https://giraffeduck.com">Atora</a>
+          </p>
+          <p class="credits">
+            <a href="https://github.com/AtoraSuunva/create-a-chart">
+              Source (GitHub)
+            </a>
+          </p>
+          <p class="credits">
+            This is build {import.meta.env.CF_PAGES_BRANCH}/
+            {import.meta.env.CF_PAGES_COMMIT_SHA}
+          </p>
+        </div>
       </div>
       <button class="expand-button" onClick={() => setHidden((prev) => !prev)}>
         {hidden ? '▶' : ' ◀'}

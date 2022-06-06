@@ -74,7 +74,7 @@ export function ChartEntries() {
         <button id="add-entry" onClick={addNewEntry}>
           Add entry
         </button>
-        <div id="entry-list">{entryComponents}</div>
+        <div class="entry-list">{entryComponents}</div>
       </div>
     </aside>
   )
