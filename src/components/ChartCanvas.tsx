@@ -8,8 +8,14 @@ export interface Point {
 }
 
 export function ChartCanvas() {
-  const baseCanvasRef = useRef<HTMLCanvasElement>(null)
-  const upperCanvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const [baseCanvas] = useState(
+    document.createElement('canvas') as HTMLCanvasElement,
+  )
+  const [upperCanvas] = useState(
+    document.createElement('canvas') as HTMLCanvasElement,
+  )
 
   const topLabel = useChartSettingsStore((state) => state.topLabel)
   const rightLabel = useChartSettingsStore((state) => state.rightLabel)
@@ -27,9 +33,22 @@ export function ChartCanvas() {
   const entries = useEntryStore((state) => state.entries)
   const updateEntry = useEntryStore((state) => state.updateEntry)
 
-  const draw = useCallback(() => {
-    const baseCanvas = baseCanvasRef.current
-    if (!baseCanvas) return
+  const composeCanvases = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    ctx.drawImage(baseCanvas, 0, 0)
+    ctx.drawImage(upperCanvas, 0, 0)
+  }, [canvasRef, baseCanvas, upperCanvas])
+
+  const drawChart = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    baseCanvas.width = canvas.width
+    baseCanvas.height = canvas.height
 
     // Render first to a temp canvas and then copy it after
     // This reduces "flickering" when adjusting settings
@@ -58,8 +77,9 @@ export function ChartCanvas() {
     const ctx = baseCanvas.getContext('2d')
     if (!ctx) return
     ctx.drawImage(tempCanvas, 0, 0)
+    composeCanvases()
   }, [
-    baseCanvasRef,
+    canvasRef,
     topLabel,
     rightLabel,
     bottomLabel,
@@ -74,8 +94,11 @@ export function ChartCanvas() {
   ])
 
   const drawEntries = useCallback(() => {
-    const upperCanvas = upperCanvasRef.current
-    if (!upperCanvas) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    upperCanvas.width = canvas.width
+    upperCanvas.height = canvas.height
 
     const ctx = upperCanvas.getContext('2d')
     if (!ctx) return
@@ -88,13 +111,14 @@ export function ChartCanvas() {
       entryNameSize,
       entries,
     })
-  }, [upperCanvasRef, chartSize, entryNameSize, entries])
+    composeCanvases()
+  }, [chartSize, entryNameSize, entries])
 
   const [clickedEntry, setClickedEntry] = useState<ChartEntry | null>(null)
 
   const handleMouseDown = useCallback(
     (e: MouseEvent) => {
-      const canvas = baseCanvasRef.current
+      const canvas = canvasRef.current
       if (!canvas) return
 
       const mouseCoords = { x: e.clientX, y: e.clientY }
@@ -117,12 +141,12 @@ export function ChartCanvas() {
         setClickedEntry(entry)
       }
     },
-    [baseCanvasRef, entries],
+    [canvasRef, entries],
   )
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      const canvas = baseCanvasRef.current
+      const canvas = canvasRef.current
       if (!canvas || !clickedEntry) return
 
       const mouseCoords = { x: e.clientX, y: e.clientY }
@@ -130,34 +154,28 @@ export function ChartCanvas() {
       const coords = canvasToEntryCoords(canvas, canvasCoords)
       updateEntry({ ...clickedEntry, coords })
     },
-    [baseCanvasRef, clickedEntry],
+    [canvasRef, clickedEntry],
   )
 
   const handleMouseUp = () => setClickedEntry(null)
 
-  useEffect(draw, [draw])
+  useEffect(drawChart, [drawChart])
   useEffect(drawEntries, [drawEntries])
 
   return (
     <main>
       <canvas
-        ref={baseCanvasRef}
+        ref={canvasRef}
         class="canvas"
         style={`background-color: ${chartColor}`}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
         width={chartSize}
         height={chartSize}
       >
         Your browser does not support the HTML5 canvas tag. How old is it???
       </canvas>
-      <canvas
-        ref={upperCanvasRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        class="canvas"
-        width={chartSize}
-        height={chartSize}
-      ></canvas>
     </main>
   )
 }
