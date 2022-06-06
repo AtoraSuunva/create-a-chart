@@ -209,7 +209,7 @@ export function ChartSettings() {
           </p>
           <p class="credits">
             This is build {import.meta.env.CF_PAGES_BRANCH}/
-            {import.meta.env.CF_PAGES_COMMIT_SHA}
+            {import.meta.env.CF_PAGES_COMMIT_SHA.substring(0, 7)}
           </p>
         </div>
       </div>
